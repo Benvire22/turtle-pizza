@@ -7,7 +7,9 @@ export interface DishOrder {
 }
 
 export interface Dish {
+  id: string
   name: string;
+  img: string;
   price: number;
 }
 
@@ -19,5 +21,6 @@ export interface ApiDishes {
 
 export interface DishMutation {
   name: string;
+  img: string
   price: string;
 }
