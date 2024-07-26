@@ -1,20 +1,26 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 import {CartDish, Dish, Order} from '../types';
-import {fetchCustomerDishes} from './customerThunks';
+import {fetchCustomerDishes, sendOrder} from './customerThunks'
 
 export interface CustomerState {
   orderDishes: Order;
   dishes: Dish[];
   cartDishes: CartDish[]
   fetchLoading: boolean;
+  isCompletedOrder: boolean;
   totalSum: number;
+  isModalShow: boolean;
+  delivery: number;
 }
 
 const initialState: CustomerState = {
   orderDishes: {},
   dishes: [],
   cartDishes: [],
+  isCompletedOrder: false,
   fetchLoading: false,
+  isModalShow: false,
+  delivery: 150,
   totalSum: 0,
 };
 
@@ -36,10 +42,27 @@ export const customerSlice = createSlice({
       },
 
       getTotalSum: (state) => {
-       state.totalSum = state.cartDishes.reduce((sum, cartDish) => {
+       state.totalSum = state.delivery + state.cartDishes.reduce((sum, cartDish) => {
           return sum += cartDish.amount * cartDish.dish.price;
         }, 0);
       },
+
+      showModal: (state) => {
+        state.isModalShow = true;
+      },
+
+      closeModal: (state) => {
+        state.isModalShow = false;
+      },
+
+      deleteCartDish: (state, {payload: id}: PayloadAction<string>) => {
+          state.cartDishes = state.cartDishes.filter((cardDish) => cardDish.dish.id !== id);
+      },
+
+      clearCart: (state) => {
+        state.cartDishes = [];
+      }
+
     },
     extraReducers: (builder) => {
       builder.addCase(fetchCustomerDishes.pending, (state) => {
@@ -50,12 +73,23 @@ export const customerSlice = createSlice({
       }).addCase(fetchCustomerDishes.rejected, (state) => {
         state.fetchLoading = false;
       });
+
+      builder.addCase(sendOrder.pending, (state) => {
+        state.isCompletedOrder = true;
+      }).addCase(sendOrder.fulfilled, (state) => {
+        state.isCompletedOrder = false;
+      }).addCase(sendOrder.rejected, (state) => {
+        state.isCompletedOrder = false;
+      });
     },
     selectors: {
       selectCustomerDishes: (state) => state.dishes,
       selectCustomerCartDishes: (state) => state.cartDishes,
       selectCustomerLoading: (state) => state.fetchLoading,
       selectTotalSum: (state) => state.totalSum,
+      selectCompleteOrder: (state) => state.isCompletedOrder,
+      selectModalShow: (state) => state.isModalShow,
+      selectDelivery: (state) => state.delivery,
     }
   },
 );
@@ -67,6 +101,16 @@ export const {
   selectCustomerLoading,
   selectCustomerCartDishes,
   selectTotalSum,
+  selectCompleteOrder,
+  selectModalShow,
+  selectDelivery,
 } = customerSlice.selectors;
 
-export const {addDishToCart, getTotalSum} = customerSlice.actions;
+export const {
+  addDishToCart,
+  getTotalSum,
+  showModal,
+  closeModal,
+  deleteCartDish,
+  clearCart,
+} = customerSlice.actions;
