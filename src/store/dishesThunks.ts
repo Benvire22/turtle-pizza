@@ -1,6 +1,6 @@
 import {createAsyncThunk} from '@reduxjs/toolkit';
 import {ApiDish, ApiDishes, Dish, DishMutation} from '../types';
-import {AppDispatch} from '../app/store';
+import {AppDispatch, RootState} from '../app/store';
 import axiosApi from '../axiosApi';
 
 export const addDish = createAsyncThunk<void, ApiDish, {dispatch: AppDispatch}>(
@@ -51,5 +51,12 @@ export const fetchOneDish = createAsyncThunk<DishMutation | null, string, {dispa
       ...dish,
       price: dish.price.toString(),
     };
+  },
+);
+
+export const deleteDish = createAsyncThunk<void, string, {state: RootState}>(
+  '/dishes/delete',
+  async (dishId) => {
+    await axiosApi.delete(`/dishes/${dishId}.json`);
   },
 );

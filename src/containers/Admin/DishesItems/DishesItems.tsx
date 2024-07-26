@@ -1,10 +1,11 @@
 import {useAppDispatch, useAppSelector} from '../../../app/hooks';
-import {selectDishes} from '../../../store/dishesSlice';
+import {selectDeleteLoading, selectDishes} from '../../../store/dishesSlice';
 import DishItem from './DishItem';
 import {useEffect} from 'react';
-import {fetchDishes} from '../../../store/dishesThunks';
+import {deleteDish, fetchDishes} from '../../../store/dishesThunks';
 
 const DishesItems = () => {
+  const isDeleting = useAppSelector(selectDeleteLoading);
   const dishes = useAppSelector(selectDishes);
   const dispatch = useAppDispatch();
 
@@ -23,6 +24,8 @@ const DishesItems = () => {
             name={dish.name}
             price={dish.price}
             image={dish.img}
+            onDelete={() => dispatch(deleteDish(dish.id))}
+            isDeleting={isDeleting}
           />
         ))}
       </div>

@@ -4,6 +4,7 @@ import React, {useEffect, useState} from 'react';
 import {ApiDish, DishMutation} from '../../types';
 import {useAppSelector} from '../../app/hooks';
 import {selectCurrentDish} from '../../store/dishesSlice';
+import ButtonSpinner from '../Spinner/ButtonSpinner';
 
 const initialState: DishMutation = {
   name: '',
@@ -95,7 +96,7 @@ const DishForm: React.FC<Props> = ({onSubmit, isLoading}) => {
                   className="btn btn-success text-white fs-4 px-3 py-2 mb-3 me-3"
                   disabled={isLoading}
                 >
-                  {/*{isLoading && <ButtonSpinner/>}*/}
+                  {isLoading && <ButtonSpinner/>}
                   save
                 </button>
                 <Link
