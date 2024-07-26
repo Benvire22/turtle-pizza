@@ -13,6 +13,11 @@ export interface Dish {
   price: number;
 }
 
+export interface CartDish {
+  dish: Dish;
+  amount: number;
+}
+
 export type ApiDish = Omit<Dish, 'id'>;
 
 export interface ApiDishes {
@@ -23,4 +28,12 @@ export interface DishMutation {
   name: string;
   img: string
   price: string;
+}
+
+export interface Order {
+  [id: string]: number;
+}
+
+export interface Orders {
+  [id: string]: Order;
 }
