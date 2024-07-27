@@ -4,6 +4,7 @@ import {addDish, deleteDish, deleteOrder, editDish, fetchDishes, fetchOneDish, f
 
 export interface DishesState {
   dishes: Dish[];
+  errorLoadingDishes: boolean
   existingDish: DishMutation | null;
   deleteLoading: false | string;
   fetchOneLoading: boolean
@@ -11,21 +12,26 @@ export interface DishesState {
   editLoading: boolean;
   fetchLoading: boolean;
   fetchOrders: boolean;
+  delivery: number;
   isOrderDeleting: boolean;
   orders: OrderCartDish[];
+  errorFetchOrders: boolean
   orderDishes: CartDish[];
 }
 
 const initialState: DishesState = {
   dishes: [],
+  errorLoadingDishes: false,
   existingDish: null,
   fetchOneLoading: false,
   deleteLoading: false,
   addLoading: false,
+  delivery: 150,
   editLoading: false,
   fetchLoading: false,
   fetchOrders: false,
   orderDishes: [],
+  errorFetchOrders: false,
   isOrderDeleting: false,
   orders: [],
 };
@@ -56,12 +62,14 @@ export const dishesSlice = createSlice({
       });
 
       builder.addCase(fetchDishes.pending, (state) => {
+        state.errorLoadingDishes = false;
         state.fetchLoading = true;
       }).addCase(fetchDishes.fulfilled, (state, {payload: dishes}) => {
         state.fetchLoading = false;
         state.dishes = dishes;
       }).addCase(fetchDishes.rejected, (state) => {
         state.fetchLoading = false;
+        state.errorLoadingDishes = true;
       });
 
       builder.addCase(fetchOneDish.pending, (state) => {
@@ -82,12 +90,14 @@ export const dishesSlice = createSlice({
       });
 
       builder.addCase(fetchOrders.pending, (state) => {
+        state.errorFetchOrders = false;
         state.fetchOrders = true;
       }).addCase(fetchOrders.fulfilled, (state, {payload: ordersCardDishes}) => {
         state.fetchOrders = false;
         state.orders = ordersCardDishes;
       }).addCase(fetchOrders.rejected, (state) => {
         state.fetchOrders = false;
+        state.errorFetchOrders = true;
       });
 
       builder.addCase(deleteOrder.pending, (state) => {
@@ -101,14 +111,17 @@ export const dishesSlice = createSlice({
     selectors: {
       selectAddLoading: (state) => state.addLoading,
       selectEditLoading: (state) => state.editLoading,
+      selectErrorLoadingDishes: (state) => state.errorLoadingDishes,
       selectFetchLoading: (state) => state.fetchLoading,
       selectDishes: (state) => state.dishes,
       selectCurrentDish: (state) => state.existingDish,
       selectOneLoading: (state) => state.fetchOneLoading,
       selectDeleteLoading: (state) => state.deleteLoading,
       selectOrdersLoading: (state) => state.fetchOrders,
+      selectErrorFetchOrders: (state) => state.errorFetchOrders,
       selectOrders: (state) => state.orders,
       selectDeleteOrder: (state) => state.isOrderDeleting,
+      selectDelivery: (state) => state.delivery,
     }
   }
 );
@@ -126,6 +139,9 @@ export const {
   selectOrdersLoading,
   selectOrders,
   selectDeleteOrder,
+  selectErrorLoadingDishes,
+  selectErrorFetchOrders,
+  selectDelivery,
 } = dishesSlice.selectors;
 
 export const {

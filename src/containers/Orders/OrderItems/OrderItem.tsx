@@ -1,5 +1,7 @@
 import React from 'react';
 import {CartDish} from '../../../types';
+import {useAppSelector} from '../../../app/hooks';
+import {selectDelivery} from '../../../store/dishesSlice';
 
 interface Props {
   cardDishes: CartDish[];
@@ -7,6 +9,8 @@ interface Props {
 }
 
 const OrderItem: React.FC<Props> = ({onDelete, cardDishes}) => {
+  const delivery = useAppSelector(selectDelivery);
+
   const getTotalSum = cardDishes.reduce((sum, cardDish) => {
     return sum + cardDish.amount * cardDish.dish.price;
   }, 0);
@@ -27,7 +31,8 @@ const OrderItem: React.FC<Props> = ({onDelete, cardDishes}) => {
       </div>
       <div className="justify-content-start d-flex flex-column">
         <h4>Order total</h4>
-        <strong className="text-primary-emphasis">Total: {getTotalSum} KGS</strong>
+        <strong className="text-primary-emphasis fs-5">Delivery: {delivery} KGS</strong>
+        <strong className="text-primary-emphasis">Total: {getTotalSum + delivery} KGS</strong>
         <button className="btn btn-success mt-3 fs-5" onClick={onDelete}>Complete order</button>
       </div>
     </div>

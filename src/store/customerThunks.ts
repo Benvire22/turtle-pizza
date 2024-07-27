@@ -22,10 +22,10 @@ export const fetchCustomerDishes = createAsyncThunk<Dish[], void, {dispatch: App
 export const sendOrder = createAsyncThunk<void, void, {state: RootState}>(
   'customer/sendOrder',
   async (_, thunkAPI) => {
-    const order = thunkAPI.getState().customer.cartDishes.reduce((acc, cardDish): ApiOrder => {
+    const order = thunkAPI.getState().customer.cartDishes.reduce((acc, cartDish): ApiOrder => {
       return {
         ...acc,
-        [cardDish.dish.id]: cardDish.amount,
+        [cartDish.dish.id]: cartDish.amount,
       };
     }, {});
 

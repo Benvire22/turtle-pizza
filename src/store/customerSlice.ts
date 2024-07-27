@@ -5,6 +5,7 @@ import {fetchCustomerDishes, sendOrder} from './customerThunks';
 export interface CustomerState {
   orderDishes: ApiOrder;
   dishes: Dish[];
+  fetchError: boolean;
   cartDishes: CartDish[];
   fetchLoading: boolean;
   isCompletedOrder: boolean;
@@ -16,6 +17,7 @@ export interface CustomerState {
 const initialState: CustomerState = {
   orderDishes: {},
   dishes: [],
+  fetchError: false,
   cartDishes: [],
   isCompletedOrder: false,
   fetchLoading: false,
@@ -68,10 +70,12 @@ export const customerSlice = createSlice({
       builder.addCase(fetchCustomerDishes.pending, (state) => {
         state.fetchLoading = true;
       }).addCase(fetchCustomerDishes.fulfilled, (state, {payload: dishes}) => {
+        state.fetchError = false;
         state.fetchLoading = false;
         state.dishes = dishes;
       }).addCase(fetchCustomerDishes.rejected, (state) => {
         state.fetchLoading = false;
+        state.fetchError = true;
       });
 
       builder.addCase(sendOrder.pending, (state) => {
@@ -84,6 +88,7 @@ export const customerSlice = createSlice({
     },
     selectors: {
       selectCustomerDishes: (state) => state.dishes,
+      selectFetchError: (state) => state.fetchError,
       selectCustomerCartDishes: (state) => state.cartDishes,
       selectCustomerLoading: (state) => state.fetchLoading,
       selectTotalSum: (state) => state.totalSum,
@@ -104,6 +109,7 @@ export const {
   selectCompleteOrder,
   selectModalShow,
   selectDelivery,
+  selectFetchError,
 } = customerSlice.selectors;
 
 export const {

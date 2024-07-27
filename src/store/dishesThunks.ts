@@ -103,7 +103,7 @@ export const fetchOrders = createAsyncThunk<OrderCartDish[], void, { state: Root
 );
 
 export const deleteOrder = createAsyncThunk<void, string, {state: RootState}>(
-  '',
+  'dishes/deleteOrder',
   async (id) => {
     await axiosApi.delete(`/orders/${id}.json`);
   },

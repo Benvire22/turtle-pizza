@@ -1,11 +1,15 @@
 import {useAppDispatch, useAppSelector} from '../../../app/hooks';
-import {addDishToCart, getTotalSum, selectCustomerDishes} from '../../../store/customerSlice';
+import {addDishToCart, getTotalSum, selectCustomerDishes, selectFetchError} from '../../../store/customerSlice';
 import {Dish} from '../../../types';
 import {useEffect} from 'react';
 import {fetchCustomerDishes} from '../../../store/customerThunks';
+import CustomerDishesItem from './CustomerDishesItem';
+
+
 const CustomerDishes = () => {
   const dishes = useAppSelector(selectCustomerDishes);
   const dispatch = useAppDispatch();
+  const isFailedFetching = useAppSelector(selectFetchError);
 
   const addDish = (dish: Dish) => {
     dispatch(addDishToCart(dish));
@@ -18,17 +22,12 @@ const CustomerDishes = () => {
 
   return (
     <div className="row justify-content-center">
+      {isFailedFetching && <h2 className="text-center my-4 text-danger">Sorry, fetching error was occurred!!</h2>}
       {dishes.map((dish) => (
-        <div
-          key={dish.id}
-          onClick={() => addDish(dish)}
-          className="d-flex btn text-primary-emphasis col-10 border rounded align-items-center justify-content-between border-primary p-3 px-4 mb-4">
-          <div className="col-2 d-flex gap-5">
-            <img className="w-100 h-auto d-inline-block border border-primary-subtle" src={dish.img} alt={dish.name}/>
-          </div>
-          <h4 className="text-primary-emphasis mt-2 fs-1">{dish.name}</h4>
-          <strong className="fs-3">Price: {dish.price} KGS</strong>
-        </div>
+        <CustomerDishesItem
+          dish={dish}
+          onAdd={() => addDish(dish)}
+        />
       ))}
     </div>
   );

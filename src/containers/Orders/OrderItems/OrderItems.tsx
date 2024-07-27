@@ -1,5 +1,5 @@
 import {useAppDispatch, useAppSelector} from '../../../app/hooks';
-import {selectDeleteOrder, selectOrders} from '../../../store/dishesSlice';
+import {selectDeleteOrder, selectErrorFetchOrders, selectOrders} from '../../../store/dishesSlice';
 import OrderItem from './OrderItem';
 import {deleteOrder, fetchDishes, fetchOrders} from '../../../store/dishesThunks';
 import Spinner from '../../../components/Spinner/Spinner';
@@ -8,6 +8,7 @@ const OrderItems = () => {
   const dispatch = useAppDispatch();
   const isDeleting = useAppSelector(selectDeleteOrder);
   const orders = useAppSelector(selectOrders);
+  const isFailedFetch = useAppSelector(selectErrorFetchOrders);
 
   const onDelete = async (id: string) => {
     try {
@@ -23,6 +24,7 @@ const OrderItems = () => {
     <>
       {isDeleting && <Spinner />}
       <div className="row justify-content-center my-4">
+        {isFailedFetch && <h2 className="text-center my-4 text-danger">Sorry, fetching error was occurred!!</h2>}
         {orders.length > 0
           ? (orders.map((order) => (
             <OrderItem
