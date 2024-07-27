@@ -1,6 +1,6 @@
 import {createSlice} from '@reduxjs/toolkit';
-import { Dish, DishMutation} from '../types';
-import {addDish, deleteDish, editDish, fetchDishes, fetchOneDish} from './dishesThunks';
+import {Dish, DishMutation, CartDish, OrderCartDish} from '../types';
+import {addDish, deleteDish, deleteOrder, editDish, fetchDishes, fetchOneDish, fetchOrders} from './dishesThunks';
 
 export interface DishesState {
   dishes: Dish[];
@@ -10,6 +10,10 @@ export interface DishesState {
   addLoading: boolean;
   editLoading: boolean;
   fetchLoading: boolean;
+  fetchOrders: boolean;
+  isOrderDeleting: boolean;
+  orders: OrderCartDish[];
+  orderDishes: CartDish[];
 }
 
 const initialState: DishesState = {
@@ -19,7 +23,11 @@ const initialState: DishesState = {
   deleteLoading: false,
   addLoading: false,
   editLoading: false,
-  fetchLoading: false
+  fetchLoading: false,
+  fetchOrders: false,
+  orderDishes: [],
+  isOrderDeleting: false,
+  orders: [],
 };
 
 export const dishesSlice = createSlice({
@@ -28,7 +36,7 @@ export const dishesSlice = createSlice({
     reducers: {
       clearCurrentDish: (state) => {
         state.existingDish = null;
-      }
+      },
     },
     extraReducers: (builder) => {
       builder.addCase(addDish.pending, (state) => {
@@ -66,13 +74,29 @@ export const dishesSlice = createSlice({
       });
 
       builder.addCase(deleteDish.pending, (state, {meta: {arg: dishId}}) => {
-          state.deleteLoading = dishId;
+        state.deleteLoading = dishId;
       }).addCase(deleteDish.fulfilled, (state) => {
         state.deleteLoading = false;
       }).addCase(deleteDish.rejected, (state) => {
         state.deleteLoading = false;
       });
 
+      builder.addCase(fetchOrders.pending, (state) => {
+        state.fetchOrders = true;
+      }).addCase(fetchOrders.fulfilled, (state, {payload: ordersCardDishes}) => {
+        state.fetchOrders = false;
+        state.orders = ordersCardDishes;
+      }).addCase(fetchOrders.rejected, (state) => {
+        state.fetchOrders = false;
+      });
+
+      builder.addCase(deleteOrder.pending, (state) => {
+        state.fetchOrders = true;
+      }).addCase(deleteOrder.fulfilled, (state) => {
+        state.fetchOrders = false;
+      }).addCase(deleteOrder.rejected, (state) => {
+        state.fetchOrders = false;
+      });
     },
     selectors: {
       selectAddLoading: (state) => state.addLoading,
@@ -82,6 +106,9 @@ export const dishesSlice = createSlice({
       selectCurrentDish: (state) => state.existingDish,
       selectOneLoading: (state) => state.fetchOneLoading,
       selectDeleteLoading: (state) => state.deleteLoading,
+      selectOrdersLoading: (state) => state.fetchOrders,
+      selectOrders: (state) => state.orders,
+      selectDeleteOrder: (state) => state.isOrderDeleting,
     }
   }
 );
@@ -95,9 +122,12 @@ export const {
   selectFetchLoading,
   selectCurrentDish,
   selectOneLoading,
-  selectDeleteLoading
+  selectDeleteLoading,
+  selectOrdersLoading,
+  selectOrders,
+  selectDeleteOrder,
 } = dishesSlice.selectors;
 
 export const {
-  clearCurrentDish
+  clearCurrentDish,
 } = dishesSlice.actions;

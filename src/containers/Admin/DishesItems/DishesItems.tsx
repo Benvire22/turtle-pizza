@@ -11,7 +11,7 @@ const DishesItems = () => {
 
   useEffect(() => {
     void dispatch(fetchDishes());
-  }, [dispatch, dishes]);
+  }, [dispatch]);
 
   return (
     <>

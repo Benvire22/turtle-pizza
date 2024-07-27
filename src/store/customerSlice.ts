@@ -1,11 +1,11 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
-import {CartDish, Dish, Order} from '../types';
-import {fetchCustomerDishes, sendOrder} from './customerThunks'
+import {CartDish, Dish, ApiOrder} from '../types';
+import {fetchCustomerDishes, sendOrder} from './customerThunks';
 
 export interface CustomerState {
-  orderDishes: Order;
+  orderDishes: ApiOrder;
   dishes: Dish[];
-  cartDishes: CartDish[]
+  cartDishes: CartDish[];
   fetchLoading: boolean;
   isCompletedOrder: boolean;
   totalSum: number;
@@ -42,7 +42,7 @@ export const customerSlice = createSlice({
       },
 
       getTotalSum: (state) => {
-       state.totalSum = state.delivery + state.cartDishes.reduce((sum, cartDish) => {
+        state.totalSum = state.delivery + state.cartDishes.reduce((sum, cartDish) => {
           return sum += cartDish.amount * cartDish.dish.price;
         }, 0);
       },
@@ -56,7 +56,7 @@ export const customerSlice = createSlice({
       },
 
       deleteCartDish: (state, {payload: id}: PayloadAction<string>) => {
-          state.cartDishes = state.cartDishes.filter((cardDish) => cardDish.dish.id !== id);
+        state.cartDishes = state.cartDishes.filter((cardDish) => cardDish.dish.id !== id);
       },
 
       clearCart: (state) => {

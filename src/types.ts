@@ -30,10 +30,15 @@ export interface DishMutation {
   price: string;
 }
 
-export interface Order {
+export interface ApiOrder {
   [id: string]: number;
 }
 
-export interface Orders {
-  [id: string]: Order;
+export interface ApiOrders {
+  [id: string]: ApiOrder;
+}
+
+export interface OrderCartDish {
+  id: string;
+  cartDishes: CartDish[];
 }

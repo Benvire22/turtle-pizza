@@ -21,7 +21,7 @@ const ToolBar = () => {
                 <NavLink to="/admin" className="nav-link" aria-current="page">Dishes</NavLink>
               </li>
               <li className="nav-item">
-                <NavLink to="add-dish" className="nav-link">Orders</NavLink>
+                <NavLink to="orders" className="nav-link">Orders</NavLink>
               </li>
             </ul>
           </div>

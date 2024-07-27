@@ -4,6 +4,8 @@ import Admin from './containers/Admin/Admin';
 import AddDish from './containers/AddDish/AddDish';
 import EditDish from './containers/EditDish/EditDish';
 import DishesItems from './containers/Admin/DishesItems/DishesItems';
+import OrdersPage from './containers/Orders/OrdersPage';
+import NotFound from './containers/NotFound/NotFound';
 
 const App = () => {
   return (
@@ -13,7 +15,9 @@ const App = () => {
         <Route path="/admin" element={<DishesItems />}/>
         <Route path="add-dish" element={<AddDish/>}/>
         <Route path="edit-dish/:id" element={<EditDish/>}/>
+        <Route path="orders" element={<OrdersPage/>}/>
       </Route>
+      <Route path="*" element={<NotFound />}/>
     </Routes>
   );
 };

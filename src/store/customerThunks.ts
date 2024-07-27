@@ -1,5 +1,5 @@
 import {createAsyncThunk} from '@reduxjs/toolkit';
-import {ApiDishes, Dish, Order} from '../types';
+import {ApiDishes, Dish, ApiOrder} from '../types';
 import {AppDispatch, RootState} from '../app/store';
 import axiosApi from '../axiosApi';
 
@@ -22,7 +22,7 @@ export const fetchCustomerDishes = createAsyncThunk<Dish[], void, {dispatch: App
 export const sendOrder = createAsyncThunk<void, void, {state: RootState}>(
   'customer/sendOrder',
   async (_, thunkAPI) => {
-    const order = thunkAPI.getState().customer.cartDishes.reduce((acc, cardDish): Order => {
+    const order = thunkAPI.getState().customer.cartDishes.reduce((acc, cardDish): ApiOrder => {
       return {
         ...acc,
         [cardDish.dish.id]: cardDish.amount,
